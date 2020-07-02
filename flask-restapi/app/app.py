@@ -30,35 +30,74 @@ class users(db.Model):
     id = db.Column('user_id', db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(50))
+    password = db.Column(db.String(100))
 
-    def __init__(self, name, email):
+    def __init__(self, name, email, password):
         self.name = name
         self.email = email
+        self.password = password
 
 
 def database_initialization_sequence():
     db.create_all()
     test_rec = users(
-            'Haritha Harikumar',
-            'haritha@gmail.com ')
+            'haritha',
+            'haritha@gmail.com ',
+            'devpassword')
 
     db.session.add(test_rec)
     db.session.rollback()
     db.session.commit()
 
-
+# Test function
 @app.route('/', methods=['GET', 'POST'])
 def home():
     print("\n\n  TESTING HOME.............................. ")
 
-    value = users('ME', 'me@gmail.com')
+    value = users('me', 'me@gmail.com', 'devpassword')
     db.session.add(value)
     db.session.commit
 
     answer = db.session.query(users).all()
 
-    print("\n\n\n value", answer)
     return jsonify({"message": answer[0].email}), 200
+
+# Test Login
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+
+    response = {
+        'message': ' Please Enter the data'
+    }
+    code = 422
+
+    print("\n\n\n\n..............0")
+
+    if request.method == 'POST':
+
+        print("\n\n\n\n................................ 1")
+
+        username = request.args.get('username')
+        print("\n\n\n username", username)
+        password = request.args.get('password')
+        print("\n\n\n password", password)
+
+        if username is not None and password is not None:
+            result = db.session.query(users).filter(users.name == username, users.password == password).first()
+            if result:
+                response = {
+                    'message': 'Successfully Logged In'
+                }
+                code = 200
+            else:
+                response = {
+                    'message': 'This User doesnt exists'
+                }
+                code = 404
+
+    print("\n\n\n\n..............2")
+
+    return jsonify(response), code
 
 
 if __name__ == '__main__':

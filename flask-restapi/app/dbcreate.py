@@ -5,7 +5,8 @@ db.create_all()
 
 test_rec = users(
         'Gayathri  P M',
-        'g3@gmail.com'
+        'g3@gmail.com',
+        'devpassword'
         )
 
 
