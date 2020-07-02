@@ -1,14 +1,10 @@
-# Dockerfile for packaging flask-webapp
-FROM python:3.6-slim
+# Basic flask container
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+FROM fanoftal2/flask-crud-base:1
 
-COPY requirements.txt /usr/src/app/
-RUN pip install  -r requirements.txt
+ADD ./app /home/app/
+WORKDIR /home/app/
 
-COPY . /usr/src/app
+EXPOSE 5000
 
-EXPOSE 8080
-
-CMD [ "python", "./api.py" ]
+ENTRYPOINT ["python3", "app.py"]
