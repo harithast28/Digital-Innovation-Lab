@@ -1,0 +1,16 @@
+[
+  {
+    "id": 0,
+    "name": "Haritha Harikumar",
+    "username":  "haritha28",
+    "email": "haritha.h20@gmail.com",
+    "password": "devpassword"
+  },
+  {
+    "id": 1,
+    "name": "Gayathri Menakath",
+    "username":  "gayathri001",
+    "email": "gayathri@gmail.com",
+    "password": "devpassword"
+  }
+]

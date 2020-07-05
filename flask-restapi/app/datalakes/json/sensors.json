@@ -1,0 +1,73 @@
+[
+  {
+    "id": 1,
+    "timestamp": "22-03-2020 12:00:00",
+    "zone": "A",
+    "sensor_count": 75,
+    "crowd_count": 70
+  },
+  {
+    "id": 2,
+    "timestamp": "22-03-2020 12:30:00",
+    "zone": "A",
+    "sensor_count": 60,
+    "crowd_count": 60
+  },
+  {
+    "id": 3,
+    "timestamp": "22-03-2020 13:00:00",
+    "zone": "A",
+    "sensor_count": 79,
+    "crowd_count": 80
+  },
+  {
+    "id": 4,
+    "timestamp": "22-03-2020 13:30:00",
+    "zone": "A",
+    "sensor_count": 220,
+    "crowd_count": 200
+  },
+  {
+    "id": 5,
+    "timestamp": "22-03-2020 14:00:00",
+    "zone": "A",
+    "sensor_count": 170,
+    "crowd_count": 170
+  },
+  {
+    "id": 6,
+    "timestamp": "22-03-2020 14:30:00",
+    "zone": "A",
+    "sensor_count": 150,
+    "crowd_count": 150
+  },
+  {
+    "id": 7,
+    "timestamp": "22-03-2020 12:00:00",
+    "zone": "B",
+    "sensor_count": 150,
+    "crowd_count": 143
+  },
+  {
+    "id": 8,
+    "timestamp": "22-03-2020 12:30:00",
+    "zone": "B",
+    "sensor_count": 230,
+    "crowd_count": 220
+  },
+  {
+    "id": 9,
+    "timestamp": "22-03-2020 13:00:00",
+    "zone": "B",
+    "sensor_count": 300,
+    "crowd_count": 288
+  },
+  {
+    "id": 10,
+    "timestamp": "22-03-2020 13:30:00",
+    "zone": "B",
+    "sensor_count": 310,
+    "crowd_count": 300
+  }
+
+]
