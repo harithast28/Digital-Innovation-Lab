@@ -1,4 +1,6 @@
 import time
+import os
+import json
 from flask import Flask, render_template, flash, redirect, request, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
@@ -26,39 +28,112 @@ app.secret_key = 'foobarbaz'
 db = SQLAlchemy(app)
 
 
-class users(db.Model):
-    id = db.Column('user_id', db.Integer, primary_key=True)
+# # MODELS
+class Restaurants(db.Model):
+
+    __tablename__ = 'restaurants'
+
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
+    address = db.Column(db.String(50))
+    rating = db.Column(db.Integer(), default=0)
+
+    def __init__(self, name, address, rating, id):
+        self.id = id
+        self.name = name
+        self.address = address
+        self.rating = rating
+
+    @classmethod
+    def save(self):
+        """
+        Save a model instance.
+        :return: Model instance
+        """
+
+        db.session.add(self)
+        db.session.commit()
+
+        return self
+
+
+class Orders(db.Model):
+    id = db.Column('order_id', db.Integer, primary_key=True)
+    total_amount = db.Column(db.Float())
+
+    def __init__(self, id, total_amount, users, restaurant):
+        self.id = id
+        self.total_amount = total_amount
+
+
+class Users(db.Model):
+
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    username = db.Column(db.String(100))
     email = db.Column(db.String(50))
     password = db.Column(db.String(100))
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, username, id):
+        self.id = id
         self.name = name
         self.email = email
         self.password = password
+        self.username = username
+
+
+# LOAD DATABASE
+def load_json(filename):
+    FILEPATH = os.path.join('datalakes',  'json')
+    with open(os.path.join(FILEPATH, filename), "r") as json_file:
+        return json.load(json_file)
+
+    return None
 
 
 def database_initialization_sequence():
+    db.drop_all()
     db.create_all()
-    test_rec = users(
-            'haritha',
-            'haritha@gmail.com ',
-            'devpassword')
 
-    db.session.add(test_rec)
-    db.session.rollback()
-    db.session.commit()
+    """
+        Initiating the database with default values here
+    """
+
+    users_data = []
+    users = load_json(filename='users.json')
+
+    for user in users:
+        users_data.append(user)
+
+    for d in users_data:
+
+        user = Users(name=d['name'],  username=d['username'],  email=d['email'], password=d['password'], id=d['id'])
+        db.session.add(user)
+        db.session.commit()
+
+    restaurants_data = []
+    restaurants = load_json(filename='restaurants.json')
+
+    for restaurant in restaurants:
+        restaurants_data.append(restaurant)
+
+    for d in restaurants_data:
+        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'])
+        db.session.add(restaurant)
+        db.session.commit()
+
 
 # Test function
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    print("\n\n  TESTING HOME.............................. ")
 
-    value = users('me', 'me@gmail.com', 'devpassword')
+    value = Users('me', 'me@gmail.com', 'devpassword')
     db.session.add(value)
     db.session.commit
 
-    answer = db.session.query(users).all()
+    answer = db.session.query(Users).all()
 
     return jsonify({"message": answer[0].email}), 200
 
@@ -71,19 +146,13 @@ def login():
     }
     code = 422
 
-    print("\n\n\n\n..............0")
-
     if request.method == 'POST':
 
-        print("\n\n\n\n................................ 1")
-
         username = request.args.get('username')
-        print("\n\n\n username", username)
         password = request.args.get('password')
-        print("\n\n\n password", password)
 
         if username is not None and password is not None:
-            result = db.session.query(users).filter(users.name == username, users.password == password).first()
+            result = db.session.query(Users).filter(Users.name == username, Users.password == password).first()
             if result:
                 response = {
                     'message': 'Successfully Logged In'
@@ -95,7 +164,26 @@ def login():
                 }
                 code = 404
 
-    print("\n\n\n\n..............2")
+    return jsonify(response), code
+
+
+# Returning the list of restauransts available
+@app.route('/restaurants/', methods=['GET'])
+def restaurants():
+
+    if request.method == 'GET':
+
+        restaurants = db.session.query(Restaurants).all()
+        if restaurants and len(restaurants) > 0:
+            response = {
+                'data': restaurants
+            }
+            code = 200
+        else:
+            response = {
+                'message':  'There are no restaurants available'
+            }
+            code = 404
 
     return jsonify(response), code
 
