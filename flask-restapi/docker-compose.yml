@@ -8,6 +8,8 @@ services:
       - ./app/:/home/app/
     depends_on:
       - db
+    restart: unless-stopped
+    
   db:
     image: postgres:10
     env_file: .env
