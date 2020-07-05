@@ -37,12 +37,14 @@ class Restaurants(db.Model):
     name = db.Column(db.String(100))
     address = db.Column(db.String(50))
     rating = db.Column(db.Integer(), default=0)
+    zone = db.Column(db.String(20))
 
-    def __init__(self, name, address, rating, id):
+    def __init__(self, name, address, rating, id, zone):
         self.id = id
         self.name = name
         self.address = address
         self.rating = rating
+        self.zone = zone
 
     @classmethod
     def save(self):
@@ -84,6 +86,24 @@ class Users(db.Model):
         self.username = username
 
 
+class Sensors(db.Model):
+
+    __tablename__ = 'sensors'
+
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.String())
+    zone = db.Column(db.String(20))
+    sensor_count = db.Column(db.Integer())
+    crowd_count = db.Column(db.Integer())
+
+    def __init__(self, timestamp, zone, sensor_count, crowd_count, id):
+        self.id = id
+        self.timestamp = timestamp
+        self.zone = zone
+        self.sensor_count = sensor_count
+        self.crowd_count = crowd_count
+
+
 # LOAD DATABASE
 def load_json(filename):
     FILEPATH = os.path.join('datalakes',  'json')
@@ -120,8 +140,19 @@ def database_initialization_sequence():
         restaurants_data.append(restaurant)
 
     for d in restaurants_data:
-        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'])
+        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'], zone=d['zone'])
         db.session.add(restaurant)
+        db.session.commit()
+
+    sensor_data = []
+    sensors = load_json(filename='sensors.json')
+
+    for sensor in sensors:
+        sensor_data.append(sensor)
+
+    for d in sensor_data:
+        sensor = Sensors(id=d['id'], zone=d['zone'], timestamp=d['timestamp'], sensor_count=d['sensor_count'], crowd_count=d['crowd_count'])
+        db.session.add(sensor)
         db.session.commit()
 
 
@@ -170,6 +201,19 @@ def login():
 # Returning the list of restauransts available
 @app.route('/restaurants/', methods=['GET'])
 def restaurants():
+
+    # TODO:
+
+    # Upon sending the data, try to write a function that sends the crowd intensity based on that time.
+    # Take  time.now() compare to dataset, compare zone to zone where restaurant is
+    # Take average of sensor count and crowd count
+    # Send that  avergae ka  percentage as crowd_intensity
+
+    # You need to  use a schema
+    # Install marshmallow schema, create schema with crowd_intensity as parameter
+    # dump the restaurantsinto that
+    # you should  get a list of json values with an  extra  field named crowd_intensity
+    # thats the result!
 
     if request.method == 'GET':
 
