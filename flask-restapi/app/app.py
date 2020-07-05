@@ -27,9 +27,13 @@ app.secret_key = 'foobarbaz'
 
 db = SQLAlchemy(app)
 
+# Json Model for results
+class JsonModel(object):
+    def as_dict(self):
+       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 # # MODELS
-class Restaurants(db.Model):
+class Restaurants(db.Model, JsonModel):
 
     __tablename__ = 'restaurants'
 
@@ -160,11 +164,13 @@ def database_initialization_sequence():
 @app.route('/', methods=['GET', 'POST'])
 def home():
 
-    value = Users('me', 'me@gmail.com', 'devpassword')
+    value = Users('me','meg', 'me@gmail.com', 'devpassword',2)
     db.session.add(value)
     db.session.commit
 
     answer = db.session.query(Users).all()
+
+    print("\n \n message: \n", answer[0].email)
 
     return jsonify({"message": answer[0].email}), 200
 
@@ -183,7 +189,7 @@ def login():
         password = request.args.get('password')
 
         if username is not None and password is not None:
-            result = db.session.query(Users).filter(Users.name == username, Users.password == password).first()
+            result = db.session.query(Users).filter(Users.username == username, Users.password == password).first()
             if result:
                 response = {
                     'message': 'Successfully Logged In'
@@ -220,7 +226,7 @@ def restaurants():
         restaurants = db.session.query(Restaurants).all()
         if restaurants and len(restaurants) > 0:
             response = {
-                'data': restaurants
+                'data': json.dumps([u.as_dict() for u in restaurants])
             }
             code = 200
         else:
