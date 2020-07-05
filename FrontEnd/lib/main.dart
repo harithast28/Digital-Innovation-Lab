@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "landing.dart";
 
 void main() {
   runApp(
@@ -90,7 +91,6 @@ class MyApp extends StatefulWidget {
 }*/
 class _MyAppState extends State<MyApp> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -101,7 +101,7 @@ class _MyAppState extends State<MyApp> {
     // than having to individually change instances of widgets.
 
     final emailField = TextField(
-      obscureText: true,
+      obscureText: false,
       style: style,
       decoration: InputDecoration(
           labelText: "Email",
@@ -125,11 +125,16 @@ class _MyAppState extends State<MyApp> {
     final loginButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
+      color: Color(0xffb87faa),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LandingPage()),
+          );
+        },
         child: Text("Login",
             textAlign: TextAlign.center,
             style: style.copyWith(
