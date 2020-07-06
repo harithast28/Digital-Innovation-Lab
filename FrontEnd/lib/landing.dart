@@ -21,14 +21,14 @@ class LandingPage extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       child: Text(
         'Andrea',
-        style: TextStyle(fontSize: 28.0, color: Colors.black),
+        style: style.copyWith(fontSize: 28.0, color: Colors.black),
       ),
     );
 
     final greenBox = Directionality(
       textDirection: TextDirection.ltr,
       child: new DefaultTextStyle(
-        style: new TextStyle(fontSize: 18.0, color: Colors.black),
+        style: style.copyWith(fontSize: 18.0, color: Colors.black),
         child: new Column(
           children: <Widget>[
             new Row(children: <Widget>[
@@ -51,11 +51,12 @@ class LandingPage extends StatelessWidget {
                     borderRadius: new BorderRadius.all(Radius.circular(8.0))),
               ),
             ]),
+            SizedBox(height: 30),
           ],
         ),
       ),
     );
-    final button1 = Material(
+    final button1 = new Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
         color: Color(0xffb87faa),
@@ -75,7 +76,7 @@ class LandingPage extends StatelessWidget {
                     fontWeight: FontWeight.bold)),
           ],
         ));
-    final button2 = Material(
+    final button2 = new Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
         color: Color(0xffb87faa),
@@ -96,7 +97,7 @@ class LandingPage extends StatelessWidget {
           ],
         ));
 
-    final button3 = Material(
+    final button3 = new Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
         color: Color(0xffb87faa),
@@ -116,7 +117,7 @@ class LandingPage extends StatelessWidget {
                     fontWeight: FontWeight.bold)),
           ],
         ));
-    final button4 = Material(
+    final button4 = new Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
         color: Color(0xffb87faa),
@@ -136,7 +137,7 @@ class LandingPage extends StatelessWidget {
                     fontWeight: FontWeight.bold)),
           ],
         ));
-    final button5 = Material(
+    final button5 = new Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
         color: Color(0xffb87faa),
@@ -156,7 +157,7 @@ class LandingPage extends StatelessWidget {
                     fontWeight: FontWeight.bold)),
           ],
         ));
-    final button6 = Material(
+    final button6 = new Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(8.0),
         color: Color(0xffb87faa),
@@ -180,19 +181,36 @@ class LandingPage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: new Column(children: <Widget>[
           new Row(
-            children: <Widget>[
-              new ButtonBar(
-                children: <Widget>[button1, button2, button3],
-              )
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                /* <Widget>[
+                  new ButtonBar(
+                    children: <Widget>[button1, button2, button3],
+                  )
+                ],*/
+                Expanded(child: button1),
+                SizedBox(width: 20),
+                Expanded(child: button2),
+                SizedBox(width: 20),
+                Expanded(child: button3),
+              ]),
+          SizedBox(height: 20),
           new Row(
-            children: <Widget>[
-              new ButtonBar(
-                children: <Widget>[button4, button5, button6],
-              )
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                /* <Widget>[
+                  new ButtonBar(
+                    children: <Widget>[button1, button2, button3],
+                  )
+                ],*/
+                Expanded(child: button4),
+                SizedBox(width: 20),
+                Expanded(child: button5),
+                SizedBox(width: 20),
+                Expanded(child: button6),
+              ]),
         ]));
 
     final body = Container(
