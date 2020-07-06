@@ -52,6 +52,7 @@ class LandingPage extends StatelessWidget {
                     borderRadius: new BorderRadius.all(Radius.circular(8.0))),
               ),
             ]),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -184,19 +185,26 @@ class LandingPage extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: new Column(children: <Widget>[
           new Row(
-            children: <Widget>[
-              new ButtonBar(
-                children: <Widget>[button1, button2, button3],
-              )
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(child: button1),
+                SizedBox(width: 20),
+                Expanded(child: button2),
+                SizedBox(width: 20),
+                Expanded(child: button3),
+              ]),
+          SizedBox(height: 20),
           new Row(
-            children: <Widget>[
-              new ButtonBar(
-                children: <Widget>[button4, button5, button6],
-              )
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(child: button4),
+                SizedBox(width: 20),
+                Expanded(child: button5),
+                SizedBox(width: 20),
+                Expanded(child: button6),
+              ]),
         ]));
 
     final body = Container(
