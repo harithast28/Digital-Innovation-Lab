@@ -27,10 +27,13 @@ app.secret_key = 'foobarbaz'
 
 db = SQLAlchemy(app)
 
+
 # Json Model for results
 class JsonModel(object):
+
     def as_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 # # MODELS
 class Restaurants(db.Model, JsonModel):
@@ -42,13 +45,15 @@ class Restaurants(db.Model, JsonModel):
     address = db.Column(db.String(50))
     rating = db.Column(db.Integer(), default=0)
     zone = db.Column(db.String(20))
+    crowd_intensity = db.Column(db.Integer(), default=0)
 
-    def __init__(self, name, address, rating, id, zone):
+    def __init__(self, name, address, rating, id, zone, crowd_intensity):
         self.id = id
         self.name = name
         self.address = address
         self.rating = rating
         self.zone = zone
+        self.crowd_intensity = crowd_intensity
 
     @classmethod
     def save(self):
@@ -144,7 +149,7 @@ def database_initialization_sequence():
         restaurants_data.append(restaurant)
 
     for d in restaurants_data:
-        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'], zone=d['zone'])
+        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'], zone=d['zone'], crowd_intensity=d['crowd_intensity'])
         db.session.add(restaurant)
         db.session.commit()
 
@@ -163,14 +168,11 @@ def database_initialization_sequence():
 # Test function
 @app.route('/', methods=['GET', 'POST'])
 def home():
-
-    value = Users('me','meg', 'me@gmail.com', 'devpassword',2)
+    value = Users('me', 'meg', 'me@gmail.com', 'devpassword', 2)
     db.session.add(value)
     db.session.commit
 
     answer = db.session.query(Users).all()
-
-    print("\n \n message: \n", answer[0].email)
 
     return jsonify({"message": answer[0].email}), 200
 
@@ -204,9 +206,7 @@ def login():
     return jsonify(response), code
 
 
-# Returning the list of restauransts available
-@app.route('/restaurants/', methods=['GET'])
-def restaurants():
+def calculate_crowd_intensity(restaurants):
 
     # TODO:
 
@@ -215,19 +215,55 @@ def restaurants():
     # Take average of sensor count and crowd count
     # Send that  avergae ka  percentage as crowd_intensity
 
-    # You need to  use a schema
-    # Install marshmallow schema, create schema with crowd_intensity as parameter
-    # dump the restaurantsinto that
-    # you should  get a list of json values with an  extra  field named crowd_intensity
-    # thats the result!
+    # time = "22-03-2020 12:00:00"
+    # zone = 'B'
+    intensity = 0
+
+    print("\n\n\n INSIDE CROWD INTENSITY FUNCTION", restaurants)
+
+    for rest in restaurants:
+
+        print("\n\n\n\n\n RESTAURANT.........", rest.zone)
+
+        if rest.zone == 'A':
+            # Should improve based on Time also
+            data = db.session.query(Sensors).filter(Sensors.zone == 'A').all()
+            for d in data:
+                intensity = intensity + int(d.crowd_count)
+        elif rest.zone == 'B':
+            data = db.session.query(Sensors).filter(Sensors.zone == 'B').all()
+            for d in data:
+                intensity = intensity + int(d.crowd_count)
+        else:
+            intensity = 0
+
+        rest.crowd_intensity = intensity/len(data) * 100
+
+    return restaurants
+
+# Returning the list of restauransts available
+@app.route('/restaurants/', methods=['GET'])
+def restaurants():
 
     if request.method == 'GET':
 
         restaurants = db.session.query(Restaurants).all()
+
+        print("\n\n\n Restaurants", restaurants)
+
         if restaurants and len(restaurants) > 0:
+
             response = {
                 'data': json.dumps([u.as_dict() for u in restaurants])
             }
+
+            print("\n\n\n........................................")
+
+            data = calculate_crowd_intensity(restaurants)
+
+            #print("\n\n\n  DATA", data)
+            print("\n\n\n  DATA", json.dumps([u.as_dict() for u in data]))
+
             code = 200
         else:
             response = {
