@@ -45,13 +45,15 @@ class Restaurants(db.Model, JsonModel):
     address = db.Column(db.String(50))
     rating = db.Column(db.Integer(), default=0)
     zone = db.Column(db.String(20))
+    crowd_intensity = db.Column(db.Integer(), default=0)
 
-    def __init__(self, name, address, rating, id, zone):
+    def __init__(self, name, address, rating, id, zone, crowd_intensity):
         self.id = id
         self.name = name
         self.address = address
         self.rating = rating
         self.zone = zone
+        self.crowd_intensity = crowd_intensity
 
     @classmethod
     def save(self):
@@ -147,7 +149,7 @@ def database_initialization_sequence():
         restaurants_data.append(restaurant)
 
     for d in restaurants_data:
-        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'], zone=d['zone'])
+        restaurant = Restaurants(id=d['id'], name=d['name'], address=d['address'], rating=d['rating'], zone=d['zone'], crowd_intensity=d['crowd_intensity'])
         db.session.add(restaurant)
         db.session.commit()
 
@@ -221,21 +223,21 @@ def calculate_crowd_intensity(restaurants):
 
     for rest in restaurants:
 
-        print("\n\n\n\n\n RESTAURANT.........", rest)
+        print("\n\n\n\n\n RESTAURANT.........", rest.zone)
 
-        if rest['zone'] == 'A':
+        if rest.zone == 'A':
             # Should improve based on Time also
             data = db.session.query(Sensors).filter(Sensors.zone == 'A').all()
             for d in data:
-                intensity = intensity + int(d['crowd_count'])
-        elif rest['zone'] == 'B':
+                intensity = intensity + int(d.crowd_count)
+        elif rest.zone == 'B':
             data = db.session.query(Sensors).filter(Sensors.zone == 'B').all()
             for d in data:
-                intensity = intensity + int(d['crowd_count'])
+                intensity = intensity + int(d.crowd_count)
         else:
             intensity = 0
 
-        rest["crowd_intensity"] = (intensity/len(data)) * 100
+        rest.crowd_intensity = intensity/len(data) * 100
 
     return restaurants
 
@@ -257,9 +259,10 @@ def restaurants():
 
             print("\n\n\n........................................")
 
-            data = calculate_crowd_intensity(response['data'])
+            data = calculate_crowd_intensity(restaurants)
 
-            print("\n\n\n  DATA", data)
+            #print("\n\n\n  DATA", data)
+            print("\n\n\n  DATA", json.dumps([u.as_dict() for u in data]))
 
             code = 200
         else:

@@ -4,34 +4,39 @@
     "name": "Pizzeria IT",
     "address":  "Via Amadeo,79",
     "rating": 4,
-    "zone": "A"
+    "zone": "A",
+    "crowd_intensity": 0
   },
   {
     "id": 2,
     "name": "Indianapolis",
     "address":  "Via Sarca,20",
     "rating": 2,
-    "zone": "B"
+    "zone": "B",
+    "crowd_intensity": 0
   },
   {
     "id": 3,
     "name": "Easy Take Away",
     "address":  "Viale Ponza,33",
     "rating": 3,
-    "zone": "A"
+    "zone": "A",
+    "crowd_intensity": 0
   },
   {
     "id": 4,
     "name": "KFC",
     "address":  "Netwon Road,144",
     "rating": 0,
-    "zone": "B"
+    "zone": "B",
+    "crowd_intensity": 0
   },
   {
     "id": 5,
     "name": "PastaNets",
     "address":  "Einstein Road,200",
     "rating": 4,
-    "zone": "A"
+    "zone": "A",
+    "crowd_intensity": 0
   }
 ]
