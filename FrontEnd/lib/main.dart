@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "landingPage.dart";
 
 void main() {
   runApp(
@@ -14,83 +15,8 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-/*class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Minicrowd'),
-          backgroundColor: Color(0xFFB87FAA),
-        ),
-        body: Container(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/Logo.jpeg',
-                  height: 200,
-                  width: 200,
-                ),
-                Text(
-                  'Email',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20),
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter your email id'),
-                ),
-                TextFormField(
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                  return null;
-                  },
-                ),
-
-                Text(
-                  'Password',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20),
-                ),
-                TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none, hintText: 'Enter your passwor'),
-                ),
-                RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Login',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25),
-                  ),
-                  color: Color(0xFF5B94A6),
-                  splashColor: Color(0xFF96BB99),
-                ),
-                Text(
-                  'Not Registered?',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20),
-                ),
-                Text(
-                  'Sign Up',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-          ),
-          padding: EdgeInsets.all(10.0),
-        ));
-  }
-}*/
 class _MyAppState extends State<MyApp> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -101,7 +27,7 @@ class _MyAppState extends State<MyApp> {
     // than having to individually change instances of widgets.
 
     final emailField = TextField(
-      obscureText: true,
+      obscureText: false,
       style: style,
       decoration: InputDecoration(
           labelText: "Email",
@@ -125,11 +51,16 @@ class _MyAppState extends State<MyApp> {
     final loginButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
+      color: Color(0xffb87faa),
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LandingPage()),
+          );
+        },
         child: Text("Login",
             textAlign: TextAlign.center,
             style: style.copyWith(
